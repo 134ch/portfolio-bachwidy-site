@@ -67,9 +67,14 @@ Lesson: when a check fails, find the line that says why before changing the rule
 
 ## Result
 
-Recorded after the CI run on the fixed pull request.
+- All five checks pass on pull request 7: the four GitHub Actions jobs and the Cloudflare preview build.
+- Three of the first failures were in the setup, not in the content: the Vale annotation limit, a dead link added in the same pull request, and the missing `previews` block. Each one is now caught or fixed.
+- Vale: 0 errors, 7 warnings across 15 files. The warnings stay visible in the job log.
+
+![Pull request 7 merge box: all five checks passed](/img/build-log/2026-11-27-pr7-checks-passed.png)
 
 ## Next
 
-- Turn on branch protection so `main` only accepts pull requests with passing checks.
+- Turn on branch protection so `main` only accepts pull requests with passing checks. This changes repository settings, so it waits for Bach's go-ahead.
 - Set up the Jira project once the Atlassian site is reachable.
+- Brainstorm the site's content before Phase 2.
