@@ -59,6 +59,10 @@ The first run on pull request 7 passed the build and Markdown lint, and failed V
 
 The fix for Vale: run the Vale command line directly in CI, the same command as a local run. One step prints warnings and never fails. A second step runs with `--minAlertLevel=error` and fails the job on errors. Annotations are gone, but the job now fails for the same reason it fails locally, and for no other.
 
+A third failure showed up after the fix. Cloudflare now builds a preview of every pull request, and that build failed at the deploy step: `wrangler preview` needs a `previews` block in `wrangler.jsonc`. The site itself built fine. The log printed the exact fix, an empty `"previews": {}` block, which was added.
+
+![Cloudflare preview build log: the Wrangler configuration is missing a previews block](/img/build-log/2026-11-27-wrangler-previews-error.png)
+
 Lesson: when a check fails, find the line that says why before changing the rules. Loosening Vale would have hidden a problem that was not in the prose at all.
 
 ## Result
