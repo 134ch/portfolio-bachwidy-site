@@ -66,12 +66,11 @@ Lesson: when a build works locally and fails in CI, read the whole error line, n
 ## Deploy result
 
 - Build 4 passed and the site serves from the Worker URL. The home page, a docs page and the generated 404 page all load.
-- The custom domain `portfolio.bachwidy.site` was added to the Worker. It showed in the dashboard, but a browser check a few minutes later still failed to load it. The cause is not yet known. Likely candidates are certificate or DNS propagation, and this is checked again before the domain is called done.
+- The custom domain `portfolio.bachwidy.site` was added to the Worker. Cloudflare issued its certificate and public DNS returned Cloudflare addresses.
+- Checked from 60 locations with check-host.net (including two in Jakarta): all returned `200 OK`.
+- The domain still failed in Bach's own Chrome. The likely cause is a cached "not found" answer from a visit made before the DNS record existed. That is a local cache problem, not a site problem. Clearing the browser's DNS cache, or waiting for it to expire, should fix it.
 - A wrong guess along the way: the ADR page is at `/docs/adr/docusaurus`, not `/docs/adr/0001-docusaurus`. Docusaurus drops the number prefix from file names. This briefly looked like a site bug and was not one.
 
 ## Next
 
-1. Create the repository and push this branch.
-2. Open the pull request and merge it.
-3. Decide hosting (ADR-0002) and deploy the first version to `portfolio.bachwidy.site`.
-4. Start Phase 1: Vale, markdownlint, lychee and a GitHub Actions workflow.
+Phase 0 is done. Phase 1 adds the checks: Vale, markdownlint, lychee, and a GitHub Actions workflow that builds the site on every pull request. That workflow would have caught the Cloudflare build failure before merge.
