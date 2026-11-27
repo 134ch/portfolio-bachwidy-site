@@ -45,7 +45,6 @@ npm run build
 - The TypeScript check (`npx tsc`) passed.
 - GitHub-style alerts render as Docusaurus admonitions. This was checked in the generated HTML of the home docs page and the style guide, not visually in a browser.
 - A search of the source files found no em dashes.
-- Not done yet: repository creation, push, pull request, deploy. Each depends on the repository existing.
 
 ## First deploy: three failed builds and the fix
 
@@ -56,13 +55,19 @@ Hosting went on Cloudflare Workers static assets (the Cloudflare-recommended pat
 | 1 | Default build image, Node 24.22.1 | Failed: `Failed to load native binding` from `@swc/html` |
 | 2 | Pinned Node 22 with `.node-version` (PR #2) | Failed: same error code, `ERR_SWC_NATIVE_CACHE` |
 | 3 | Build command set `SWC_NATIVE_BINDING_CACHE` to a folder in the repo | Failed: the check rejected the folder too |
-| 4 | Turned Docusaurus Faster off in `docusaurus.config.ts` | Local build passes; see the result in the deploy section below |
+| 4 | Turned Docusaurus Faster off in `docusaurus.config.ts` (PR #3) | Passed. The site is live on the Workers URL |
 
 What the log showed: the SWC native addon checks the permissions of its cache folder and refuses to run when a parent folder is writable by another user. On Cloudflare's build image, `/opt/buildhome/.cache`, `/tmp` and a folder inside the repo all failed that check. The first error message looked like a Node version problem, which is why attempt 2 was a wrong guess. The full error text sat off-screen to the right in the dashboard log, and reading it was what found the real cause.
 
 Why this site hit it: setting `future.v4: true` turns on Docusaurus Faster by default (`fasterByDefault`). Faster loads `@swc/html`. The fix keeps the other v4 flags and sets `future.faster: false`. Builds are a little slower and the output is the same.
 
 Lesson: when a build works locally and fails in CI, read the whole error line, not the first line, and check which defaults a "future" flag switches on.
+
+## Deploy result
+
+- Build 4 passed and the site serves from the Worker URL. The home page, a docs page and the generated 404 page all load.
+- The custom domain `portfolio.bachwidy.site` was added to the Worker. It showed in the dashboard, but a browser check a few minutes later still failed to load it. The cause is not yet known. Likely candidates are certificate or DNS propagation, and this is checked again before the domain is called done.
+- A wrong guess along the way: the ADR page is at `/docs/adr/docusaurus`, not `/docs/adr/0001-docusaurus`. Docusaurus drops the number prefix from file names. This briefly looked like a site bug and was not one.
 
 ## Next
 

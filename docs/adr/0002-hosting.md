@@ -4,7 +4,7 @@ sidebar_label: "ADR-0002: Hosting"
 sidebar_position: 3
 ---
 
-**Status:** Proposed. **Date:** 27 Nov 2026. **Decided by:** Bach, pending.
+**Status:** Accepted. **Date:** 27 Nov 2026. **Decided by:** Bach, by going ahead with Claude's proposal.
 
 ## Context
 
@@ -27,12 +27,21 @@ The quota gain is on builds only. At daily-update volume the Pages build limit i
 
 ## Decision
 
-Pending. Bach chooses.
+Host on one Cloudflare Worker with static assets, built by Workers Builds from the `main` branch.
+
+Reasons:
+
+- Cloudflare directs new projects to Workers static assets.
+- One deployment can serve the site now and the API and MCP server later.
+- Workers Builds has its own build allowance (3,000 minutes per month on Free), separate from the Pages build count.
+
+The quota gain is small at this volume. The choice is mostly about where Cloudflare is investing, and it is reversible because the output is the same `build/` folder.
 
 ## Consequences
 
 - Either choice builds from the same `npm run build` output in the `build/` folder.
-- The choice is recorded here once made, with the reason.
+- The Worker is `portfolio-bachwidy-site`. Its config is `wrangler.jsonc` in the repository root.
+- The first deploy took four attempts. See the [Phase 0 build log](../build-log/2026-11-27-phase-0-foundations.md).
 
 ## Sources
 
