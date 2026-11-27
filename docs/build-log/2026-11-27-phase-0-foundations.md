@@ -1,7 +1,7 @@
 ---
 title: "27 Nov 2026: Phase 0 foundations"
 sidebar_label: "27 Nov 2026: Phase 0 foundations"
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 ## Goal
@@ -56,6 +56,12 @@ Hosting went on Cloudflare Workers static assets (the Cloudflare-recommended pat
 | 2 | Pinned Node 22 with `.node-version` (PR #2) | Failed: same error code, `ERR_SWC_NATIVE_CACHE` |
 | 3 | Build command set `SWC_NATIVE_BINDING_CACHE` to a folder in the repo | Failed: the check rejected the folder too |
 | 4 | Turned Docusaurus Faster off in `docusaurus.config.ts` (PR #3) | Passed. The site is live on the Workers URL |
+
+![Cloudflare deployments list: two failed builds, then the build from pull request 3 marked Ready](/img/build-log/2026-11-27-cloudflare-builds.png)
+
+![Build 1 log: Docusaurus Faster options need @docusaurus/faster, caused by Failed to load native binding](/img/build-log/2026-11-27-build-1-error.png)
+
+![Build 2 log: SWC native addon user cache failed, cache root has a parent writable by another user](/img/build-log/2026-11-27-build-2-swc-cache-error.png)
 
 What the log showed: the SWC native addon checks the permissions of its cache folder and refuses to run when a parent folder is writable by another user. On Cloudflare's build image, `/opt/buildhome/.cache`, `/tmp` and a folder inside the repo all failed that check. The first error message looked like a Node version problem, which is why attempt 2 was a wrong guess. The full error text sat off-screen to the right in the dashboard log, and reading it was what found the real cause.
 

@@ -19,7 +19,7 @@ const config: Config = {
     faster: false,
   },
 
-  url: 'https://portfolio.bachwidy.site',
+  url: 'https://docs.bachwidy.site',
   baseUrl: '/',
 
   organizationName: '134ch',
