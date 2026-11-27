@@ -38,14 +38,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      # Rules are in .vale.ini and .vale/styles/House. Only errors fail the job;
-      # warnings and suggestions show as annotations on the pull request.
-      - uses: errata-ai/vale-action@v3
+      - uses: actions/setup-python@v7
         with:
-          version: 3.28.1
-          files: '["docs", "README.md", "CONTRIBUTING.md"]'
-          filter_mode: nofilter
-          fail_on_error: true
+          python-version: '3.12'
+      # Same Vale version and commands as a local run (see CONTRIBUTING.md).
+      # Rules are in .vale.ini and .vale/styles/House.
+      - run: pip install vale==3.28.1.0
+      - run: vale sync
+      # Warnings are printed for the reviewer to read; they never fail the job.
+      - name: Vale warnings (do not fail)
+        run: vale --minAlertLevel=warning --no-exit docs README.md CONTRIBUTING.md
+      # Errors fail the job.
+      - name: Vale errors
+        run: vale --minAlertLevel=error docs README.md CONTRIBUTING.md
 
   links:
     name: External links (lychee)

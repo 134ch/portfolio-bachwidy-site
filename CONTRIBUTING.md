@@ -49,4 +49,4 @@ vale sync && vale docs README.md CONTRIBUTING.md
 
 Vale is not an npm package. Install it from the [Vale installation page](https://vale.sh/docs/install), or with `pip install vale`.
 
-To switch a Vale rule off on purpose, wrap the lines in Vale's comment markers and say why in a comment. The style guide source does this for the lists that quote banned words, so copy it from there. See [Vale comments](https://vale.sh/docs/topics/config/#markup-based-configuration).
+To switch a Vale rule off on purpose, wrap the lines in Vale's comment markers and say why in a comment. The style guide source does this for the lists that quote banned words, so copy it from there. See [Vale comments in Markdown](https://docs.vale.sh/formats/markdown).

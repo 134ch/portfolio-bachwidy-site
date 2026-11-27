@@ -48,11 +48,22 @@ After tuning: 0 errors, 7 warnings, and the suggestions shown only when asked fo
 - `.md` files are now parsed as plain CommonMark (`markdown.format: 'detect'` in `docusaurus.config.ts`). Docusaurus parses `.md` as MDX by default, so the HTML comments Vale uses broke the build with `Unexpected character !`. ADR-0001 already said the pages are plain Markdown; the config now enforces it. Admonitions still render.
 - Only Vale errors fail the check. Warnings and suggestions show as annotations, so a new rule can start as a warning and be promoted once the pages comply.
 - lychee accepts `403` and `429` responses, because some sites block automated checks or rate-limit them. A real dead link returns `404`.
-- Action versions are pinned to major versions found on 27 Nov 2026: `actions/checkout@v7`, `actions/setup-node@v7`, `errata-ai/vale-action@v3`, `DavidAnson/markdownlint-cli2-action@v25`, `lycheeverse/lychee-action@v2`.
+- Action versions are pinned to major versions found on 27 Nov 2026: `actions/checkout@v7`, `actions/setup-node@v7`, `actions/setup-python@v7`, `DavidAnson/markdownlint-cli2-action@v25`, `lycheeverse/lychee-action@v2`.
+
+## First CI run and its two failures
+
+The first run on pull request 7 passed the build and Markdown lint, and failed Vale and lychee.
+
+- **lychee found a real dead link.** The Vale documentation link added to `CONTRIBUTING.md` in this same pull request returned `404`. Vale's docs moved to `docs.vale.sh`. The link now points to the Markdown page there. The check did its job on its first run.
+- **Vale failed without any Vale errors.** The log showed 0 findings at error level. The job used `errata-ai/vale-action`, which passes every finding to reviewdog to post as annotations. Vale reported 141 findings, mostly suggestions. GitHub allows 10 annotations per level per step, and reviewdog stopped with `Too many results (annotations) in diff`.
+
+The fix for Vale: run the Vale command line directly in CI, the same command as a local run. One step prints warnings and never fails. A second step runs with `--minAlertLevel=error` and fails the job on errors. Annotations are gone, but the job now fails for the same reason it fails locally, and for no other.
+
+Lesson: when a check fails, find the line that says why before changing the rules. Loosening Vale would have hidden a problem that was not in the prose at all.
 
 ## Result
 
-Recorded after the first CI run on the pull request.
+Recorded after the CI run on the fixed pull request.
 
 ## Next
 
