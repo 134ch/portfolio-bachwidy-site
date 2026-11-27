@@ -1,6 +1,6 @@
 # Bach Widy Portfolio
 
-Source for `portfolio.bachwidy.site`, a documentation-style portfolio. It holds case studies, articles, work evidence, services and contact details, and it documents how it was built.
+Source for `docs.bachwidy.site`, a documentation-style portfolio. It holds case studies, articles, work evidence, services and contact details, and it documents how it was built.
 
 ## Principles
 

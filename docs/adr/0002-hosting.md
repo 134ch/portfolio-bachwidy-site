@@ -8,7 +8,7 @@ sidebar_position: 3
 
 ## Context
 
-The site, the read-only API (`/api/v1/*`) and the MCP server (`/mcp`) must all be served from `portfolio.bachwidy.site` at $0. Bach already hosts several sites on Cloudflare Pages. Both options below deploy the same Docusaurus build output, so this decision does not change the repository.
+The site, the read-only API (`/api/v1/*`) and the MCP server (`/mcp`) must all be served from one subdomain of `bachwidy.site` at $0 (first `portfolio.bachwidy.site`, now `docs.bachwidy.site`; see [ADR-0003](./0003-domain.md)). Bach already hosts several sites on Cloudflare Pages. Both options below deploy the same Docusaurus build output, so this decision does not change the repository.
 
 ## Options considered
 
