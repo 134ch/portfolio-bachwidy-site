@@ -47,6 +47,23 @@ npm run build
 - A search of the source files found no em dashes.
 - Not done yet: repository creation, push, pull request, deploy. Each depends on the repository existing.
 
+## First deploy: three failed builds and the fix
+
+Hosting went on Cloudflare Workers static assets (the Cloudflare-recommended path for new projects). The first deploy took four attempts. Each failure is recorded here because the same trap will catch other Docusaurus sites.
+
+| Attempt | Setup | Result |
+| --- | --- | --- |
+| 1 | Default build image, Node 24.22.1 | Failed: `Failed to load native binding` from `@swc/html` |
+| 2 | Pinned Node 22 with `.node-version` (PR #2) | Failed: same error code, `ERR_SWC_NATIVE_CACHE` |
+| 3 | Build command set `SWC_NATIVE_BINDING_CACHE` to a folder in the repo | Failed: the check rejected the folder too |
+| 4 | Turned Docusaurus Faster off in `docusaurus.config.ts` | Local build passes; see the result in the deploy section below |
+
+What the log showed: the SWC native addon checks the permissions of its cache folder and refuses to run when a parent folder is writable by another user. On Cloudflare's build image, `/opt/buildhome/.cache`, `/tmp` and a folder inside the repo all failed that check. The first error message looked like a Node version problem, which is why attempt 2 was a wrong guess. The full error text sat off-screen to the right in the dashboard log, and reading it was what found the real cause.
+
+Why this site hit it: setting `future.v4: true` turns on Docusaurus Faster by default (`fasterByDefault`). Faster loads `@swc/html`. The fix keeps the other v4 flags and sets `future.faster: false`. Builds are a little slower and the output is the same.
+
+Lesson: when a build works locally and fails in CI, read the whole error line, not the first line, and check which defaults a "future" flag switches on.
+
 ## Next
 
 1. Create the repository and push this branch.

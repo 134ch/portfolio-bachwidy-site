@@ -13,6 +13,10 @@ const config: Config = {
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Prepares the site for Docusaurus v4 (3.10 is the last v3 release)
+    // v4 turns Docusaurus Faster on by default. Faster loads the @swc/html native addon,
+    // which refuses to start on Cloudflare's build image (cache folder permission check).
+    // See docs/build-log for the failed builds. Revisit when the SWC issue is resolved.
+    faster: false,
   },
 
   url: 'https://portfolio.bachwidy.site',
