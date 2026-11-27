@@ -1,0 +1,9 @@
+# lychee link checker. Internal links are already checked by the Docusaurus build
+# (onBrokenLinks: throw), so lychee checks external links in the Markdown sources.
+max_retries = 3
+retry_wait_time = 5
+timeout = 30
+accept = ["200..=299", "403", "429"]
+scheme = ["https", "http"]
+exclude_path = ["node_modules", "build", ".docusaurus", ".vale"]
+exclude = ["^https://github.com/134ch/portfolio-bachwidy-site/(edit|tree)/"]

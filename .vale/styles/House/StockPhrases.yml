@@ -1,0 +1,12 @@
+extends: existence
+message: "Avoid the stock phrase '%s'. Say the concrete thing instead."
+level: warning
+ignorecase: true
+tokens:
+  - game-changer
+  - game changer
+  - unleash
+  - synergy
+  - delve into
+  - testament to
+  - "here's what matters"

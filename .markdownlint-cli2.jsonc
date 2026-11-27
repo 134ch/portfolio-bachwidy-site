@@ -1,0 +1,10 @@
+// markdownlint rules. Line length is off because prose is written one paragraph per line.
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD033": false
+  },
+  "globs": ["docs/**/*.md", "*.md"],
+  "ignores": ["node_modules", "build", ".vale"]
+}

@@ -19,6 +19,12 @@ const config: Config = {
     faster: false,
   },
 
+  // Parse .md files as CommonMark and only .mdx files as MDX (ADR-0001: plain Markdown).
+  // This also allows HTML comments, which Vale uses to switch rules off on purpose.
+  markdown: {
+    format: 'detect',
+  },
+
   url: 'https://docs.bachwidy.site',
   baseUrl: '/',
 

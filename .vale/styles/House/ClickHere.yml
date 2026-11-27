@@ -1,0 +1,7 @@
+extends: existence
+message: "Write link text that names the target, not '%s'."
+level: error
+ignorecase: true
+tokens:
+  - click here
+  - '\[here\]'

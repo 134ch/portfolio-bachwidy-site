@@ -1,7 +1,7 @@
 ---
 title: "27 Nov 2026: Move to docs.bachwidy.site"
 sidebar_label: "27 Nov 2026: Domain move"
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 ## Goal

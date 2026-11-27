@@ -2,6 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "portfolio-bachwidy-site",
   "compatibility_date": "2026-11-27",
+  // Cloudflare builds a preview of every pull request with `wrangler preview`,
+  // which needs this block. Empty means previews use the same settings as production.
+  "previews": {},
   "assets": {
     "directory": "./build",
     "not_found_handling": "404-page"

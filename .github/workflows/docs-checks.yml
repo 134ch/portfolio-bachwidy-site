@@ -1,0 +1,64 @@
+# Runs on every pull request and every push to main.
+# A pull request should only be merged when all four jobs pass.
+name: Docs checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      # Fails on broken internal links (onBrokenLinks: throw in docusaurus.config.ts).
+      - run: npm run build
+      - run: npx tsc
+
+  markdownlint:
+    name: Markdown lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Rules and file globs are in .markdownlint-cli2.jsonc.
+      - uses: DavidAnson/markdownlint-cli2-action@v25
+
+  vale:
+    name: Prose style (Vale)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      # Same Vale version and commands as a local run (see CONTRIBUTING.md).
+      # Rules are in .vale.ini and .vale/styles/House.
+      - run: pip install vale==3.28.1.0
+      - run: vale sync
+      # Warnings are printed for the reviewer to read; they never fail the job.
+      - name: Vale warnings (do not fail)
+        run: vale --minAlertLevel=warning --no-exit docs README.md CONTRIBUTING.md
+      # Errors fail the job.
+      - name: Vale errors
+        run: vale --minAlertLevel=error docs README.md CONTRIBUTING.md
+
+  links:
+    name: External links (lychee)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Settings are in lychee.toml.
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --config lychee.toml --no-progress 'docs/**/*.md' README.md CONTRIBUTING.md
+          fail: true

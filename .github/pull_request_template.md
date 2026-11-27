@@ -11,8 +11,7 @@ One sentence: what does this change do, and why?
 ## Checklist
 
 - [ ] The page has one content type and follows the style guide
-- [ ] `npm run build` passes locally
-- [ ] Links work (the build fails on broken links)
+- [ ] All four checks pass (build, Markdown lint, Vale, links)
 - [ ] A build log entry is added or updated
 - [ ] A decision record is added if this change makes or changes a decision
 - [ ] Sources are linked for any looked-up fact, with an as-of date
