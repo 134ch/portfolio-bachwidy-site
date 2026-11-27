@@ -10,3 +10,4 @@ A decision record (ADR) captures one decision: the context, the options, the cho
 | [ADR-0001](./0001-docusaurus.md) | Build the site with Docusaurus | Accepted | 27 Nov 2026 |
 | [ADR-0002](./0002-hosting.md) | Host on Cloudflare: Pages or Workers static assets | Accepted | 27 Nov 2026 |
 | [ADR-0003](./0003-domain.md) | Serve the site from docs.bachwidy.site | Accepted | 27 Nov 2026 |
+| [ADR-0004](./0004-vale-microsoft-base.md) | Use the Microsoft style as the Vale base | Accepted | 27 Nov 2026 |

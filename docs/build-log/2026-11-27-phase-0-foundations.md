@@ -1,7 +1,7 @@
 ---
 title: "27 Nov 2026: Phase 0 foundations"
 sidebar_label: "27 Nov 2026: Phase 0 foundations"
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 ## Goal
@@ -46,7 +46,7 @@ npm run build
 - GitHub-style alerts render as Docusaurus admonitions. This was checked in the generated HTML of the home docs page and the style guide, not visually in a browser.
 - A search of the source files found no em dashes.
 
-## First deploy: three failed builds and the fix
+## First deploy and the three failed builds
 
 Hosting went on Cloudflare Workers static assets (the Cloudflare-recommended path for new projects). The first deploy took four attempts. Each failure is recorded here because the same trap will catch other Docusaurus sites.
 
@@ -59,7 +59,7 @@ Hosting went on Cloudflare Workers static assets (the Cloudflare-recommended pat
 
 ![Cloudflare deployments list: two failed builds, then the build from pull request 3 marked Ready](/img/build-log/2026-11-27-cloudflare-builds.png)
 
-![Build 1 log: Docusaurus Faster options need @docusaurus/faster, caused by Failed to load native binding](/img/build-log/2026-11-27-build-1-error.png)
+![Build 1 log: Docusaurus Faster needs its package, caused by a failure to load the SWC native binding](/img/build-log/2026-11-27-build-1-error.png)
 
 ![Build 2 log: SWC native addon user cache failed, cache root has a parent writable by another user](/img/build-log/2026-11-27-build-2-swc-cache-error.png)
 

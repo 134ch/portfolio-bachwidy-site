@@ -6,7 +6,7 @@ This repository has one author, and it still works through branches and pull req
 
 1. Create a branch from `main`. Name it `phase-N-short-topic` or `content-short-topic`.
 2. Make one small change.
-3. Run `npm run build` and fix every error. The build fails on broken links.
+3. Run the checks in [Checks](#checks) and fix every error.
 4. Add or update a build log entry in `docs/build-log/`.
 5. Add a decision record in `docs/adr/` if the change makes or changes a decision.
 6. Commit with a clear message in the imperative, for example `Add content inventory`.
@@ -30,4 +30,23 @@ A change is done when:
 
 ## Checks
 
-Automated prose, link and Markdown checks arrive in Phase 1. Until then, the build is the only automated check and the pull request checklist covers the rest.
+Every pull request runs four checks in GitHub Actions (`.github/workflows/docs-checks.yml`). Merge only when all four pass.
+
+| Check | Tool | Fails on | Config |
+| --- | --- | --- | --- |
+| Build site | Docusaurus, TypeScript | Build errors, broken internal links, type errors | `docusaurus.config.ts` |
+| Markdown lint | markdownlint-cli2 | Any rule violation | `.markdownlint-cli2.jsonc` |
+| Prose style | Vale | Errors only. Warnings and suggestions show as annotations | `.vale.ini`, `.vale/styles/House/` |
+| External links | lychee | Dead external links | `lychee.toml` |
+
+Run the same checks locally before you push:
+
+```bash
+npm run build
+npx markdownlint-cli2
+vale sync && vale docs README.md CONTRIBUTING.md
+```
+
+Vale is not an npm package. Install it from the [Vale installation page](https://vale.sh/docs/install), or with `pip install vale`.
+
+To switch a Vale rule off on purpose, wrap the lines in Vale's comment markers and say why in a comment. The style guide source does this for the lists that quote banned words, so copy it from there. See [Vale comments](https://vale.sh/docs/topics/config/#markup-based-configuration).

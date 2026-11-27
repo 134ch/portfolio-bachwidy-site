@@ -1,0 +1,59 @@
+# Runs on every pull request and every push to main.
+# A pull request should only be merged when all four jobs pass.
+name: Docs checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      # Fails on broken internal links (onBrokenLinks: throw in docusaurus.config.ts).
+      - run: npm run build
+      - run: npx tsc
+
+  markdownlint:
+    name: Markdown lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Rules and file globs are in .markdownlint-cli2.jsonc.
+      - uses: DavidAnson/markdownlint-cli2-action@v25
+
+  vale:
+    name: Prose style (Vale)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Rules are in .vale.ini and .vale/styles/House. Only errors fail the job;
+      # warnings and suggestions show as annotations on the pull request.
+      - uses: errata-ai/vale-action@v3
+        with:
+          version: 3.28.1
+          files: '["docs", "README.md", "CONTRIBUTING.md"]'
+          filter_mode: nofilter
+          fail_on_error: true
+
+  links:
+    name: External links (lychee)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Settings are in lychee.toml.
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --config lychee.toml --no-progress 'docs/**/*.md' README.md CONTRIBUTING.md
+          fail: true

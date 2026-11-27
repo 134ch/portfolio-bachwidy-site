@@ -1,0 +1,60 @@
+---
+title: "27 Nov 2026: Phase 1 CI checks"
+sidebar_label: "27 Nov 2026: Phase 1 CI checks"
+sidebar_position: 2
+---
+
+## Goal
+
+Run the same checks a docs team runs on every pull request: the site builds, the Markdown is clean, the prose follows the style guide and external links work. The first deploy showed why: three Cloudflare builds failed on a problem that a build on every pull request would have caught before merge.
+
+## What was done
+
+1. Installed Vale 3.28.1, lychee 0.24.2 and markdownlint-cli2 0.23.2 locally, to tune the rules on the existing pages before CI enforces them.
+2. Configured Vale with the Microsoft style as a base ([ADR-0004](../adr/0004-vale-microsoft-base.md)) and wrote four house rules from the style guide: no em dashes, link text that names its target, no stock phrases and no "honest" as a qualifier.
+3. Configured markdownlint with the default rules, minus line length (prose is one paragraph per line) and inline HTML.
+4. Configured lychee for external links only. Internal links are already checked by the Docusaurus build.
+5. Wrote the workflow `.github/workflows/docs-checks.yml` with four jobs: build, Markdown lint, Vale and links.
+6. Updated `CONTRIBUTING.md`, the pull request template and the style guide to point at the checks.
+
+## Commands
+
+```bash
+pip install vale
+vale sync
+vale docs README.md CONTRIBUTING.md
+npx markdownlint-cli2
+lychee --config lychee.toml 'docs/**/*.md' README.md CONTRIBUTING.md
+```
+
+## Tuning Vale on the existing pages
+
+The first Vale run on 13 files gave 48 errors, 7 warnings and 115 suggestions. Most errors were house choices that the Microsoft style treats as mistakes:
+
+| Finding | Count | What was done |
+| --- | --- | --- |
+| Date format `27 Nov 2026` | 14 | Kept. The house writes day month year. Rule turned off |
+| Contractions (`do not`, `it is`) | 15 | Not decided yet. Lowered to a suggestion |
+| Punctuation inside quotes | 5 | Not decided yet. Lowered to a suggestion |
+| `click here` in the style guide | 1 | The guide quotes the words it bans. Rule turned off around that line only |
+| Heading with a lowercase word after a colon | 1 | Fixed the heading |
+| `docusaurus` in image alt text | 1 | Fixed the alt text |
+| `Widy` flagged as a spelling error | 1 | Added to the project vocabulary |
+
+After tuning: 0 errors, 7 warnings, and the suggestions shown only when asked for.
+
+## Decisions
+
+- `.md` files are now parsed as plain CommonMark (`markdown.format: 'detect'` in `docusaurus.config.ts`). Docusaurus parses `.md` as MDX by default, so the HTML comments Vale uses broke the build with `Unexpected character !`. ADR-0001 already said the pages are plain Markdown; the config now enforces it. Admonitions still render.
+- Only Vale errors fail the check. Warnings and suggestions show as annotations, so a new rule can start as a warning and be promoted once the pages comply.
+- lychee accepts `403` and `429` responses, because some sites block automated checks or rate-limit them. A real dead link returns `404`.
+- Action versions are pinned to major versions found on 27 Nov 2026: `actions/checkout@v7`, `actions/setup-node@v7`, `errata-ai/vale-action@v3`, `DavidAnson/markdownlint-cli2-action@v25`, `lycheeverse/lychee-action@v2`.
+
+## Result
+
+Recorded after the first CI run on the pull request.
+
+## Next
+
+- Turn on branch protection so `main` only accepts pull requests with passing checks.
+- Set up the Jira project once the Atlassian site is reachable.

@@ -19,3 +19,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .swc-cache
+.vale/styles/*
+!.vale/styles/House/
+!.vale/styles/config/
